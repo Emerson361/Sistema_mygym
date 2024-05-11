@@ -8,6 +8,8 @@ import Modelo.Admin;
 import Modelo.AdministradorDAO;
 import Modelo.Entrenador;
 import Modelo.EntrenadorDAO;
+import Modelo.Membresia;
+import Modelo.MembresiaDAO;
 import Modelo.Nutricionista;
 import Modelo.NutricionistaDAO;
 import Modelo.Rutina;
@@ -37,7 +39,10 @@ public class Controlador extends HttpServlet {
 
     Rutina rut = new Rutina();
     RutinaDAO rutDAO = new RutinaDAO();
-
+    
+    Membresia mem = new Membresia();
+    MembresiaDAO memDAO = new MembresiaDAO();
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -47,7 +52,7 @@ public class Controlador extends HttpServlet {
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
         }
-
+        /*
         if (menu.equals("Rutina")) {
             switch (accion) {
                 case "Listar":
@@ -116,7 +121,8 @@ public class Controlador extends HttpServlet {
                     break;
             }
             request.getRequestDispatcher("Rutina.jsp").forward(request, response);
-        }
+        }*/
+
 
         if (menu.equals("Nutricionista")) {
             switch (accion) {
@@ -350,6 +356,73 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Administrador.jsp").forward(request, response);
         }
+        
+        if (menu.equals("Membresia")) {
+            switch (accion) {
+                case "Listar":
+                    List lista = memDAO.listar();
+                    request.setAttribute("membresias", lista);
+                    break;
+
+                case "Agregar":
+                    String TipoMembresia = request.getParameter("txtTipoMembresia");
+                    String Duracion = request.getParameter("txtDuracion");
+                    double Precio = Double.parseDouble(request.getParameter("txtPrecio"));
+                    String Acceso = request.getParameter("txtAcceso");
+                    String Observacion = request.getParameter("txtObservacion");
+                    
+                    mem.setTipoMembresia(TipoMembresia);
+                    mem.setDuracion(Duracion);
+                    mem.setPrecio(Precio);
+                    mem.setAcceso(Acceso);
+                    mem.setObservacion(Observacion);
+                    memDAO.agregar(mem);
+                    // Redirigir a la página Membresia y mostrar una alerta
+                    String mensaje1 = "Membresia agregado correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Membresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Membresia m = memDAO.listarId(ide);
+                    request.setAttribute("membresia", m);
+                    request.getRequestDispatcher("Controlador?menu=Membresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Actualizar":
+                    String TipoMembresia1 = request.getParameter("txtTipoMembresia");
+                    String Duracion1 = request.getParameter("txtDuracion");
+                    double Precio1 = Double.parseDouble(request.getParameter("txtPrecio"));
+                    String Acceso1 = request.getParameter("txtAcceso");
+                    String Observacion1 = request.getParameter("txtObservacion");
+                    
+                    mem.setTipoMembresia(TipoMembresia1);
+                    mem.setDuracion(Duracion1);
+                    mem.setPrecio(Precio1);
+                    mem.setAcceso(Acceso1);
+                    mem.setObservacion(Observacion1);
+                    mem.setId(ide);
+                    memDAO.actualizar(mem);
+                    
+                    // Redirigir a la página Membresia y mostrar una alerta
+                    String mensaje2 = "Membresia actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=Membresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Eliminar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    memDAO.eliminar(ide);
+                    // Redirigir a la página Membresia y mostrar una alerta
+                    String mensaje3 = "Membresia eliminado correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=Membresia&accion=Listar").forward(request, response);
+                    break;
+            }
+            request.getRequestDispatcher("Membresia.jsp").forward(request, response);
+        }
+       
 
     }
 

@@ -38,7 +38,7 @@
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Rutina&accion=Listar" target="myFrame"><strong>Rutina</strong></a>
                     </li>
                     <li class="nav-item">
-                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="#"><strong>Membresia</strong></a>
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Membresia&accion=Listar" target="myFrame"><strong>Membresia</strong></a>
                     </li>
                 </ul>
             </div>

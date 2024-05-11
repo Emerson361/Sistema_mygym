@@ -28,13 +28,13 @@ public class Controlador extends HttpServlet {
     Admin admin = new Admin();
     AdministradorDAO adminDAO = new AdministradorDAO();
     int ide;
-    
+
     Entrenador ent = new Entrenador();
     EntrenadorDAO entDAO = new EntrenadorDAO();
-    
+
     Nutricionista nut = new Nutricionista();
     NutricionistaDAO nutDAO = new NutricionistaDAO();
-    
+
     Rutina rut = new Rutina();
     RutinaDAO rutDAO = new RutinaDAO();
 
@@ -117,7 +117,7 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Rutina.jsp").forward(request, response);
         }
-        
+
         if (menu.equals("Nutricionista")) {
             switch (accion) {
                 case "Listar":
@@ -145,6 +145,9 @@ public class Controlador extends HttpServlet {
                     nut.setFechaTermino(fechatermino);
                     nut.setHorario(horario);
                     nutDAO.agregar(nut);
+                    // Redirigir a la página Nutricionista y mostrar una alerta
+                    String mensaje1 = "Nutricionista agregado correctamente";
+                    request.setAttribute("mensaje", mensaje1);
                     request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
                     break;
 
@@ -176,18 +179,24 @@ public class Controlador extends HttpServlet {
                     nut.setHorario(horario1);
                     nut.setId(ide);
                     nutDAO.actualizar(nut);
+                    // Redirigir a la página Nutricionista y mostrar una alerta
+                    String mensaje2 = "Nutricionista actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
                     request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
                     break;
 
                 case "Eliminar":
                     ide = Integer.parseInt(request.getParameter("id"));
                     nutDAO.eliminar(ide);
+                    // Redirigir a la página Nutricionista y mostrar una alerta
+                    String mensaje3 = "Nutricionista eliminado correctamente";
+                    request.setAttribute("eliminar", mensaje3);
                     request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
                     break;
             }
             request.getRequestDispatcher("Nutricionista.jsp").forward(request, response);
         }
-        
+
         if (menu.equals("Entrenador")) {
             switch (accion) {
                 case "Listar":
@@ -215,6 +224,9 @@ public class Controlador extends HttpServlet {
                     ent.setFechaTermino(fechatermino);
                     ent.setHorario(horario);
                     entDAO.agregar(ent);
+                    // Redirigir a la página Entrenador y mostrar una alerta
+                    String mensaje1 = "Entrenador agregado correctamente";
+                    request.setAttribute("mensaje", mensaje1);
                     request.getRequestDispatcher("Controlador?menu=Entrenador&accion=Listar").forward(request, response);
                     break;
 
@@ -246,12 +258,18 @@ public class Controlador extends HttpServlet {
                     ent.setHorario(horario1);
                     ent.setId(ide);
                     entDAO.actualizar(ent);
+                    // Redirigir a la página Entrenador y mostrar una alerta
+                    String mensaje2 = "Entrenador actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
                     request.getRequestDispatcher("Controlador?menu=Entrenador&accion=Listar").forward(request, response);
                     break;
 
                 case "Eliminar":
                     ide = Integer.parseInt(request.getParameter("id"));
                     entDAO.eliminar(ide);
+                    // Redirigir a la página Entrenador y mostrar una alerta
+                    String mensaje3 = "Entrenador eliminado correctamente";
+                    request.setAttribute("eliminar", mensaje3);
                     request.getRequestDispatcher("Controlador?menu=Entrenador&accion=Listar").forward(request, response);
                     break;
             }
@@ -283,6 +301,9 @@ public class Controlador extends HttpServlet {
                     admin.setUsuario(NUsuario);
                     admin.setPassword(contraseña);
                     adminDAO.agregar(admin);
+                    // Redirigir a la página Administrador y mostrar una alerta
+                    String mensaje1 = "Administrador agregado correctamente";
+                    request.setAttribute("mensaje", mensaje1);
                     request.getRequestDispatcher("Controlador?menu=Administrador&accion=Listar").forward(request, response);
                     break;
 
@@ -312,12 +333,18 @@ public class Controlador extends HttpServlet {
                     admin.setPassword(contraseña1);
                     admin.setId(ide);
                     adminDAO.actualizar(admin);
+                    // Redirigir a la página Administrador y mostrar una alerta
+                    String mensaje2 = "Administrador actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
                     request.getRequestDispatcher("Controlador?menu=Administrador&accion=Listar").forward(request, response);
                     break;
 
                 case "Eliminar":
                     ide = Integer.parseInt(request.getParameter("id"));
                     adminDAO.eliminar(ide);
+                    // Redirigir a la página Administrador y mostrar una alerta
+                    String mensaje3 = "Administrador eliminado correctamente";
+                    request.setAttribute("eliminar", mensaje3);
                     request.getRequestDispatcher("Controlador?menu=Administrador&accion=Listar").forward(request, response);
                     break;
             }

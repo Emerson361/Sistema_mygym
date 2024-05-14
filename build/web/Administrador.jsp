@@ -28,6 +28,7 @@
                 <h2 class="text-center">Administrador</h2>
                 <div class="card-body">
                     <form action="Controlador?menu=Administrador" method="POST">
+                        
                         <div class="form-group">
                             <label>Nombre:</label>
                             <input type="text" value="${administrador.getNombre()}" name="txtNombre" class="form-control">

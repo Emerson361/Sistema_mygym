@@ -23,7 +23,7 @@
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Administrador&accion=Listar" target="myFrame"><strong>Administrador</strong></a>
                     </li>
                     <li class="nav-item">
-                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="#"><strong>Cliente</strong></a>
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Cliente&accion=Listar" target="myFrame"><strong>Cliente</strong></a>
                     </li>
                     <li class="nav-item">
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Entrenador&accion=Listar" target="myFrame"><strong>Entrenador</strong></a>
@@ -39,6 +39,9 @@
                     </li>
                     <li class="nav-item">
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Membresia&accion=Listar" target="myFrame"><strong>Membresia</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="#"><strong>Venta</strong></a>
                     </li>
                 </ul>
             </div>

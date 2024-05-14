@@ -6,6 +6,8 @@ package Controlador;
 
 import Modelo.Admin;
 import Modelo.AdministradorDAO;
+import Modelo.Cliente;
+import Modelo.ClienteDAO;
 import Modelo.Entrenador;
 import Modelo.EntrenadorDAO;
 import Modelo.Membresia;
@@ -42,6 +44,9 @@ public class Controlador extends HttpServlet {
     
     Membresia mem = new Membresia();
     MembresiaDAO memDAO = new MembresiaDAO();
+    
+    Cliente cli = new Cliente();
+    ClienteDAO cliDAO = new ClienteDAO();
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -122,7 +127,91 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Rutina.jsp").forward(request, response);
         }*/
+        
+        if (menu.equals("Cliente")) {
+            switch (accion) {
+                case "Listar":
+                    List lista = cliDAO.listar();
+                    request.setAttribute("clientes", lista);
+                    break;
 
+                case "Agregar":
+                    String nombre = request.getParameter("txtNombre");
+                    String apellido = request.getParameter("txtApellido");
+                    String TDoc = request.getParameter("txtTipoDocumento");
+                    String NDoc = request.getParameter("txtDocumento");
+                    String telefono = request.getParameter("txtTelefono");
+                    String correo = request.getParameter("txtCorreo");
+                    String genero = request.getParameter("txtgenero");
+                    String fecha_nac = request.getParameter("txtfechanac");
+                    String NUsuario = request.getParameter("txtNombreUsuario");
+                    String contraseña = request.getParameter("txtContrasena");
+                    cli.setNombre(nombre);
+                    cli.setApellido(apellido);
+                    cli.setTipo_doc(TDoc);
+                    cli.setNum_doc(NDoc);
+                    cli.setTelefono(telefono);
+                    cli.setCorreo(correo);
+                    cli.setGenero(genero);
+                    cli.setFecha_nac(fecha_nac);
+                    cli.setUsuario(NUsuario);
+                    cli.setPassword(contraseña);
+                    cliDAO.agregar(cli);
+     
+                    // Redirigir a la página Cliente y mostrar una alerta
+                    String mensaje1 = "Cliente agregado correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Cliente&accion=Listar").forward(request, response);
+                    break;
+
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Cliente c = cliDAO.listarId(ide);
+                    request.setAttribute("cliente", c);
+                    request.getRequestDispatcher("Controlador?menu=Cliente&accion=Listar").forward(request, response);
+                    break;
+
+                case "Actualizar":
+                    String nombre1 = request.getParameter("txtNombre");
+                    String apellido1 = request.getParameter("txtApellido");
+                    String TDoc1 = request.getParameter("txtTipoDocumento");
+                    String NDoc1 = request.getParameter("txtDocumento");
+                    String telefono1 = request.getParameter("txtTelefono");
+                    String correo1 = request.getParameter("txtCorreo");
+                    String genero1 = request.getParameter("txtgenero");
+                    String fecha_nac1 = request.getParameter("txtfechanac");
+                    String NUsuario1 = request.getParameter("txtNombreUsuario");
+                    String contraseña1 = request.getParameter("txtContrasena");
+                    cli.setNombre(nombre1);
+                    cli.setApellido(apellido1);
+                    cli.setTipo_doc(TDoc1);
+                    cli.setNum_doc(NDoc1);
+                    cli.setTelefono(telefono1);
+                    cli.setCorreo(correo1);
+                    cli.setGenero(genero1);
+                    cli.setFecha_nac(fecha_nac1);
+                    cli.setUsuario(NUsuario1);
+                    cli.setPassword(contraseña1);
+                    cli.setId(ide);
+                    cliDAO.actualizar(cli);
+                   
+                    // Redirigir a la página Cliente y mostrar una alerta
+                    String mensaje2 = "Cliente actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=Cliente&accion=Listar").forward(request, response);
+                    break;
+
+                case "Eliminar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    cliDAO.eliminar(ide);
+                    // Redirigir a la página Cliente y mostrar una alerta
+                    String mensaje3 = "Cliente eliminado correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=Cliente&accion=Listar").forward(request, response);
+                    break;
+            }
+            request.getRequestDispatcher("Cliente.jsp").forward(request, response);
+        }
 
         if (menu.equals("Nutricionista")) {
             switch (accion) {

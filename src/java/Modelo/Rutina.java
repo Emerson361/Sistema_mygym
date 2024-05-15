@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Modelo;
-import Modelo.Entrenador;
 /**
  *
  * @author EMERSOM APAZA
@@ -11,25 +10,28 @@ import Modelo.Entrenador;
 public class Rutina {
     int id;
     String nombre;
-    String tiporutina;
     String descripcion;
     String dificultad;
     String frecuencia;
-    int entrenador;
+    int identrenador;
+    String entrenador;
 
     public Rutina() {
     }
 
-    public Rutina(int id, String nombre, String tiporutina, String descripcion, String dificultad, String frecuencia, int entrenador) {
+    public Rutina(int id, String nombre, String descripcion, String dificultad, String frecuencia, int identrenador, String entrenador) {
         this.id = id;
         this.nombre = nombre;
-        this.tiporutina = tiporutina;
         this.descripcion = descripcion;
         this.dificultad = dificultad;
         this.frecuencia = frecuencia;
+        this.identrenador = identrenador;
         this.entrenador = entrenador;
     }
 
+    
+    
+    
     public int getId() {
         return id;
     }
@@ -44,14 +46,6 @@ public class Rutina {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getTiporutina() {
-        return tiporutina;
-    }
-
-    public void setTiporutina(String tiporutina) {
-        this.tiporutina = tiporutina;
     }
 
     public String getDescripcion() {
@@ -78,15 +72,23 @@ public class Rutina {
         this.frecuencia = frecuencia;
     }
 
-    public int getEntrenador() {
+    public int getIdentrenador() {
+        return identrenador;
+    }
+
+    public void setIdentrenador(int identrenador) {
+        this.identrenador = identrenador;
+    }
+
+    public String getEntrenador() {
         return entrenador;
     }
 
-    public void setEntrenador(int entrenador) {
+    public void setEntrenador(String entrenador) {
         this.entrenador = entrenador;
     }
 
     
-    
+
     
 }

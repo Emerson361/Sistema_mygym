@@ -44,8 +44,11 @@ public class RutinaDAO {
         return admin;
     }*/
     // OPERACIONES CRUD
+    
     public List listar() {
-        String sql = "SELECT * FROM rutina";
+        String sql = "SELECT rutina.id_rutina, rutina.Nombre, rutina.descripcion, rutina.dificultad, rutina.frecuencia, "
+                + "entrenador.id_entrenador, CONCAT(entrenador.Nombre, ' ', entrenador.Apellido) AS nombre_entrenador "
+                + "FROM rutina INNER JOIN entrenador ON rutina.identrenador = entrenador.id_entrenador";
         List<Rutina> lista = new ArrayList<>();
         try {
             con = cn.Conexion();
@@ -55,11 +58,11 @@ public class RutinaDAO {
                 Rutina rut = new Rutina();
                 rut.setId(rs.getInt("id_rutina"));
                 rut.setNombre(rs.getString("Nombre"));
-                rut.setTiporutina(rs.getString("tipo_rutina"));
                 rut.setDescripcion(rs.getString("descripcion"));
                 rut.setDificultad(rs.getString("dificultad"));
-                rut.setFrecuencia(rs.getString("frecuencia"));              
-                rut.setEntrenador(rs.getInt("identrenador")); 
+                rut.setFrecuencia(rs.getString("frecuencia"));    
+                rut.setIdentrenador(rs.getInt("id_entrenador"));
+                rut.setEntrenador(rs.getString("nombre_entrenador")); 
                 lista.add(rut); //em
             }
         } catch (Exception e) {
@@ -68,21 +71,19 @@ public class RutinaDAO {
         return lista;
     }
 
-    public int agregar(Nutricionista nut) {
-        String sql = "INSERT INTO nutricionista(Nombre, Apellido, doc_tipo, doc_num, telefono, correo, fecha_contratacion, fecha_termino, horario) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public int agregar(Rutina rut) {
+        String sql = "INSERT INTO rutina(Nombre, descripcion, dificultad, frecuencia, identrenador) "
+                + "VALUES(?, ?, ?, ?, ?)";
+        int r = 0;
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
             
-            ps.setString(1, nut.getNombre());
-            ps.setString(2, nut.getApellido());
-            ps.setString(3, nut.getTipo_doc());
-            ps.setString(4, nut.getNum_doc());
-            ps.setString(5, nut.getTelefono());
-            ps.setString(6, nut.getCorreo());
-            ps.setString(7, nut.getFecha());
-            ps.setString(8, nut.getFechaTermino());
-            ps.setString(9, nut.getHorario());
+            ps.setString(1, rut.getNombre());
+            ps.setString(2, rut.getDescripcion());
+            ps.setString(3, rut.getDificultad());
+            ps.setString(4, rut.getFrecuencia());
+            ps.setInt(5, rut.getIdentrenador());
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -90,45 +91,38 @@ public class RutinaDAO {
         return r; // rpta
     }
 
-    public Nutricionista listarId(int id) {
-        Nutricionista nu = new Nutricionista();
-        String sql = "select * from nutricionista where id_nutricionista=" + id;
+    public Rutina listarId(int id) {
+        Rutina ru = new Rutina();
+        String sql = "select * from rutina where id_rutina=" + id;
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                nu.setNombre(rs.getString(2));
-                nu.setApellido(rs.getString(3));
-                nu.setTipo_doc(rs.getString(4));
-                nu.setNum_doc(rs.getString(5));
-                nu.setTelefono(rs.getString(6));
-                nu.setCorreo(rs.getString(7));
-                nu.setFecha(rs.getString(8));
-                nu.setFechaTermino(rs.getString(9));
-                nu.setHorario(rs.getString(10)); //emp
+                ru.setNombre(rs.getString(2));
+                ru.setDescripcion(rs.getString(3));
+                ru.setDificultad(rs.getString(4));
+                ru.setFrecuencia(rs.getString(5));
+                ru.setEntrenador(rs.getString(6));
+                
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return nu;
+        return ru;
     }
 
-    public int actualizar(Nutricionista nut) {
-        String sql = "update nutricionista set Nombre=?, Apellido=?, doc_tipo=?, doc_num=?, telefono=?, correo=?, fecha_contratacion=?, fecha_termino=?, horario=? where id_nutricionista=?";
+    public int actualizar(Rutina rut) {
+        String sql = "update rutina set Nombre=?, descripcion=?, dificultad=?, frecuencia=?, identrenador=? where id_rutina=?";
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
-            ps.setString(1, nut.getNombre());
-            ps.setString(2, nut.getApellido());
-            ps.setString(3, nut.getTipo_doc());
-            ps.setString(4, nut.getNum_doc());
-            ps.setString(5, nut.getTelefono());
-            ps.setString(6, nut.getCorreo());
-            ps.setString(7, nut.getFecha());
-            ps.setString(8, nut.getFechaTermino());
-            ps.setString(9, nut.getHorario());
-            ps.setInt(10, nut.getId());
+            ps.setString(1, rut.getNombre());
+            ps.setString(2, rut.getDescripcion());
+            ps.setString(3, rut.getDificultad());
+            ps.setString(4, rut.getFrecuencia());
+            ps.setString(5, rut.getEntrenador());
+            ps.setInt(6, rut.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -137,7 +131,7 @@ public class RutinaDAO {
     }
 
     public void eliminar(int id) {
-        String sql = "delete from nutricionista where id_nutricionista=" + id;
+        String sql = "delete from rutina where id_rutina=" + id;
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);

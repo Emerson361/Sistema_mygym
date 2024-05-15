@@ -41,13 +41,13 @@ public class Controlador extends HttpServlet {
 
     Rutina rut = new Rutina();
     RutinaDAO rutDAO = new RutinaDAO();
-    
+
     Membresia mem = new Membresia();
     MembresiaDAO memDAO = new MembresiaDAO();
-    
+
     Cliente cli = new Cliente();
     ClienteDAO cliDAO = new ClienteDAO();
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -57,77 +57,78 @@ public class Controlador extends HttpServlet {
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
         }
-        /*
+
         if (menu.equals("Rutina")) {
             switch (accion) {
+                    
                 case "Listar":
                     List lista = rutDAO.listar();
                     request.setAttribute("rutinas", lista);
+                    List lista2 = entDAO.listar(); // capturar los nombres de la tabla entrenador en el combobox
+                    request.setAttribute("entrenadores", lista2);
                     break;
 
                 case "Agregar":
                     String nombre = request.getParameter("txtNombre");
-                    String apellido = request.getParameter("txtApellido");
-                    String TDoc = request.getParameter("txtTipoDocumento");
-                    String NDoc = request.getParameter("txtDocumento");
-                    String telefono = request.getParameter("txtTelefono");
-                    String correo = request.getParameter("txtCorreo");
-                    String fecha = request.getParameter("txtfecha");
-                    String fechatermino = request.getParameter("txtfechatermino");
-                    String horario = request.getParameter("txthorario");
-                    nut.setNombre(nombre);
-                    nut.setApellido(apellido);
-                    nut.setTipo_doc(TDoc);
-                    nut.setNum_doc(NDoc);
-                    nut.setTelefono(telefono);
-                    nut.setCorreo(correo);
-                    nut.setFecha(fecha);
-                    nut.setFechaTermino(fechatermino);
-                    nut.setHorario(horario);
-                    nutDAO.agregar(nut);
-                    request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
+                    String descripcion = request.getParameter("txtdescripcion");
+                    String dificultad = request.getParameter("txtdificultad");
+                    String frecuencia = request.getParameter("txtfrecuencia");
+                    String identrenadorStr = request.getParameter("txtentrenador");
+                    // Convertir el ID del entrenador a entero para enviarlo al formulario y bd / captura el id/value del combobox
+                    int identrenador = Integer.parseInt(identrenadorStr);
+                    
+                    rut.setNombre(nombre);
+                    rut.setDescripcion(descripcion);
+                    rut.setDificultad(dificultad);
+                    rut.setFrecuencia(frecuencia);
+                    rut.setIdentrenador(identrenador);
+
+                    rutDAO.agregar(rut);
+                    // Redirigir a la página Rutina y mostrar una alerta
+                    String mensaje1 = "Rutina agregada correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Rutina&accion=Listar").forward(request, response);
                     break;
 
                 case "Editar":
                     ide = Integer.parseInt(request.getParameter("id"));
-                    Nutricionista n = nutDAO.listarId(ide);
-                    request.setAttribute("nutricionista", n);
-                    request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
+                    Rutina r = rutDAO.listarId(ide);
+                    request.setAttribute("rutina", r);
+                    request.getRequestDispatcher("Controlador?menu=Rutina&accion=Listar").forward(request, response);
                     break;
 
                 case "Actualizar":
                     String nombre1 = request.getParameter("txtNombre");
-                    String apellido1 = request.getParameter("txtApellido");
-                    String TDoc1 = request.getParameter("txtTipoDocumento");
-                    String NDoc1 = request.getParameter("txtDocumento");
-                    String telefono1 = request.getParameter("txtTelefono");
-                    String correo1 = request.getParameter("txtCorreo");
-                    String fecha1 = request.getParameter("txtfecha");
-                    String fechatermino1 = request.getParameter("txtfechatermino");
-                    String horario1 = request.getParameter("txthorario");
-                    nut.setNombre(nombre1);
-                    nut.setApellido(apellido1);
-                    nut.setTipo_doc(TDoc1);
-                    nut.setNum_doc(NDoc1);
-                    nut.setTelefono(telefono1);
-                    nut.setCorreo(correo1);
-                    nut.setFecha(fecha1);
-                    nut.setFechaTermino(fechatermino1);
-                    nut.setHorario(horario1);
-                    nut.setId(ide);
-                    nutDAO.actualizar(nut);
-                    request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
+                    String descripcion1 = request.getParameter("txtdescripcion");
+                    String dificultad1 = request.getParameter("txtdificultad");
+                    String frecuencia1 = request.getParameter("txtfrecuencia");
+                    String identrenadorStr1 = request.getParameter("txtentrenador");
+                    
+                    rut.setNombre(nombre1);
+                    rut.setDescripcion(descripcion1);
+                    rut.setDificultad(dificultad1);
+                    rut.setFrecuencia(frecuencia1);
+                    rut.setEntrenador(identrenadorStr1);
+                    rut.setId(ide);
+                    rutDAO.actualizar(rut);
+                    // Redirigir a la página Rutina y mostrar una alerta
+                    String mensaje2 = "Rutina actualizada correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=Rutina&accion=Listar").forward(request, response);
                     break;
 
                 case "Eliminar":
                     ide = Integer.parseInt(request.getParameter("id"));
-                    nutDAO.eliminar(ide);
-                    request.getRequestDispatcher("Controlador?menu=Nutricionista&accion=Listar").forward(request, response);
+                    rutDAO.eliminar(ide);
+                    // Redirigir a la página Rutina y mostrar una alerta
+                    String mensaje3 = "Rutina eliminada correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=Rutina&accion=Listar").forward(request, response);
                     break;
             }
             request.getRequestDispatcher("Rutina.jsp").forward(request, response);
-        }*/
-        
+        }
+
         if (menu.equals("Cliente")) {
             switch (accion) {
                 case "Listar":
@@ -157,7 +158,7 @@ public class Controlador extends HttpServlet {
                     cli.setUsuario(NUsuario);
                     cli.setPassword(contraseña);
                     cliDAO.agregar(cli);
-     
+
                     // Redirigir a la página Cliente y mostrar una alerta
                     String mensaje1 = "Cliente agregado correctamente";
                     request.setAttribute("mensaje", mensaje1);
@@ -194,7 +195,7 @@ public class Controlador extends HttpServlet {
                     cli.setPassword(contraseña1);
                     cli.setId(ide);
                     cliDAO.actualizar(cli);
-                   
+
                     // Redirigir a la página Cliente y mostrar una alerta
                     String mensaje2 = "Cliente actualizado correctamente";
                     request.setAttribute("mensaje", mensaje2);
@@ -445,7 +446,7 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Administrador.jsp").forward(request, response);
         }
-        
+
         if (menu.equals("Membresia")) {
             switch (accion) {
                 case "Listar":
@@ -459,7 +460,7 @@ public class Controlador extends HttpServlet {
                     double Precio = Double.parseDouble(request.getParameter("txtPrecio"));
                     String Acceso = request.getParameter("txtAcceso");
                     String Observacion = request.getParameter("txtObservacion");
-                    
+
                     mem.setTipoMembresia(TipoMembresia);
                     mem.setDuracion(Duracion);
                     mem.setPrecio(Precio);
@@ -485,7 +486,7 @@ public class Controlador extends HttpServlet {
                     double Precio1 = Double.parseDouble(request.getParameter("txtPrecio"));
                     String Acceso1 = request.getParameter("txtAcceso");
                     String Observacion1 = request.getParameter("txtObservacion");
-                    
+
                     mem.setTipoMembresia(TipoMembresia1);
                     mem.setDuracion(Duracion1);
                     mem.setPrecio(Precio1);
@@ -493,7 +494,7 @@ public class Controlador extends HttpServlet {
                     mem.setObservacion(Observacion1);
                     mem.setId(ide);
                     memDAO.actualizar(mem);
-                    
+
                     // Redirigir a la página Membresia y mostrar una alerta
                     String mensaje2 = "Membresia actualizado correctamente";
                     request.setAttribute("mensaje", mensaje2);
@@ -511,8 +512,6 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Membresia.jsp").forward(request, response);
         }
-       
-
     }
 
     @Override

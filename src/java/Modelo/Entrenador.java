@@ -115,6 +115,5 @@ public class Entrenador {
     public void setHorario(String horario) {
         this.horario = horario;
     }
-
     
 }

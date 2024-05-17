@@ -18,7 +18,7 @@ public class Rutina {
 
     public Rutina() {
     }
-
+    
     public Rutina(int id, String nombre, String descripcion, String dificultad, String frecuencia, int identrenador, String entrenador) {
         this.id = id;
         this.nombre = nombre;

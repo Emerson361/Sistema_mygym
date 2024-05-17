@@ -32,7 +32,7 @@
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Nutricionista&accion=Listar" target="myFrame"><strong>Nutricionista</strong></a>
                     </li>
                     <li class="nav-item">
-                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="#"><strong>Dieta</strong></a>
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Dieta&accion=Listar" target="myFrame"><strong>Dieta</strong></a>
                     </li>
                     <li class="nav-item">
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Rutina&accion=Listar" target="myFrame"><strong>Rutina</strong></a>

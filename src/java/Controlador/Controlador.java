@@ -8,6 +8,8 @@ import Modelo.Admin;
 import Modelo.AdministradorDAO;
 import Modelo.Cliente;
 import Modelo.ClienteDAO;
+import Modelo.Dieta;
+import Modelo.DietaDAO;
 import Modelo.Entrenador;
 import Modelo.EntrenadorDAO;
 import Modelo.Membresia;
@@ -38,6 +40,9 @@ public class Controlador extends HttpServlet {
 
     Nutricionista nut = new Nutricionista();
     NutricionistaDAO nutDAO = new NutricionistaDAO();
+    
+    DietaDAO dietaDAO = new DietaDAO();
+    Dieta diet = new Dieta();
 
     Rutina rut = new Rutina();
     RutinaDAO rutDAO = new RutinaDAO();
@@ -56,6 +61,76 @@ public class Controlador extends HttpServlet {
 
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
+        }
+ if (menu.equals("Dieta")) {
+            switch (accion) {
+                case "Listar":
+                    List lista = dietaDAO.listar();
+                    request.setAttribute("dietas", lista);
+                    List lista2 = nutDAO.listar();
+                    request.setAttribute("nutricionistas", lista2);
+                    break;
+
+                case "Agregar":
+                    String nombre = request.getParameter("txtNombre");
+                    String tipDieta = request.getParameter("txtTipoDieta");
+                    String duracion = request.getParameter("txtDuracion");
+                    String supl = request.getParameter("txtSuplemento");
+                    String idNutrS = request.getParameter("txtNutricionista");
+                    int idNutr = Integer.parseInt(idNutrS);
+                    
+                    
+                    diet.setNombre(nombre);
+                    diet.setTipoDieta(tipDieta);
+                    diet.setDuracion(duracion);
+                    diet.setSuplemento(supl);
+                    diet.setIdNutricionista(idNutr);
+                    
+                    dietaDAO.agregar(diet);
+                    String mensaje1 = "Dieta agregada correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Dieta&accion=Listar").forward(request, response);
+                    break;
+
+
+
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Dieta d = dietaDAO.listarId(ide);
+                    request.setAttribute("dieta", d);
+                    request.getRequestDispatcher("Controlador?menu=Dieta&accion=Listar").forward(request, response);
+                    break;
+
+                case "Actualizar":
+                    String nombre1 = request.getParameter("txtNombre");
+                    String tipDieta1 = request.getParameter("txtTipoDieta");
+                    String duracion1 = request.getParameter("txtDuracion");
+                    String supl1 = request.getParameter("txtSuplemento");
+                    String idNutrS1 = request.getParameter("txtNutricionista");
+                    
+                    diet.setNombre(nombre1);
+                    diet.setTipoDieta(tipDieta1);
+                    diet.setDuracion(duracion1);
+                    diet.setSuplemento(supl1);
+                    diet.setNutricionista(idNutrS1);
+                    
+                    
+                    diet.setIdDieta(ide);
+                    dietaDAO.actualizar(diet);
+                    String mensaje2 = "Dieta actualizada correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=Dieta&accion=Listar").forward(request, response);
+                    break;
+
+                case "Eliminar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    dietaDAO.eliminar(ide);
+                    String mensaje3 = "Dieta eliminada correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=Dieta&accion=Listar").forward(request, response);
+                    break;
+            }
+            request.getRequestDispatcher("Dieta.jsp").forward(request, response);
         }
 
         if (menu.equals("Rutina")) {

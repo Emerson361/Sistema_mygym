@@ -28,9 +28,6 @@ public class Rutina {
         this.identrenador = identrenador;
         this.entrenador = entrenador;
     }
-
-    
-    
     
     public int getId() {
         return id;

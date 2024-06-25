@@ -18,6 +18,8 @@ import Modelo.Nutricionista;
 import Modelo.NutricionistaDAO;
 import Modelo.Rutina;
 import Modelo.RutinaDAO;
+import Modelo.Ventas;
+import Modelo.VentasDAO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -52,6 +54,10 @@ public class Controlador extends HttpServlet {
 
     Cliente cli = new Cliente();
     ClienteDAO cliDAO = new ClienteDAO();
+    
+    Ventas venta = new Ventas();
+    VentasDAO ventasDAO = new VentasDAO();
+
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -587,6 +593,96 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Membresia.jsp").forward(request, response);
         }
+        
+        if (menu.equals("Ventas")) {
+            switch (accion) {
+                case "Listar":
+                    List lista = ventasDAO.listar();
+                    request.setAttribute("ventas", lista);
+                    List lista2 = cliDAO.listar();
+                    request.setAttribute("clientes", lista2);
+                    List lista3 = memDAO.listar();
+                    request.setAttribute("membresias", lista3);
+                    List lista4 = dietaDAO.listar();
+                    request.setAttribute("dietas", lista4);
+                    List lista5 = rutDAO.listar();
+                    request.setAttribute("rutinas", lista5);
+                    break;
+
+                case "Agregar":
+                    String fechaVenta = request.getParameter("txtFechaVenta");
+                    String observacion = request.getParameter("txtObservacion");
+                    String fechaInicio = request.getParameter("txtFechaInicio");
+                    String fechaFinal = request.getParameter("txtFechaFinal");
+                    String horario = request.getParameter("txtHorario");
+                    String idMembresia = request.getParameter("txtIdMembresia");
+                    String idDieta = request.getParameter("txtIdDieta");
+                    String idRutina = request.getParameter("txtIdRutina");
+                    String idCliente = request.getParameter("txtIdCliente");
+                    
+                    venta.setFechaVenta(fechaVenta);
+                    venta.setObservacion(observacion);
+                    venta.setFechaInicio(fechaInicio);
+                    venta.setFechaFinal(fechaFinal);
+                    venta.setHorario(horario);
+                    venta.setIdMembresia(Integer.parseInt(idMembresia));
+                    venta.setIdDieta(Integer.parseInt(idDieta));
+                    venta.setIdRutina(Integer.parseInt(idRutina));
+                    venta.setIdCliente(Integer.parseInt(idCliente));
+                    ventasDAO.agregar(venta);
+                    
+                    String mensaje1 = "Venta agregada correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
+                    break;
+
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Ventas v = ventasDAO.listarId(ide);
+                    request.setAttribute("venta", v);
+                    request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
+                    break;
+
+                case "Actualizar":
+                    String fechaVenta1 = request.getParameter("txtFechaVenta");
+                    String observacion1 = request.getParameter("txtObservacion");
+                    String fechaInicio1 = request.getParameter("txtFechaInicio");
+                    String fechaFinal1 = request.getParameter("txtFechaFinal");
+                    String horario1 = request.getParameter("txtHorario");
+                    String idMembresia1 = request.getParameter("txtIdMembresia");
+                    String idDieta1 = request.getParameter("txtIdDieta");
+                    String idRutina1 = request.getParameter("txtIdRutina");
+                    String idCliente1 = request.getParameter("txtIdCliente");
+                    
+                    venta.setFechaVenta(fechaVenta1);
+                    venta.setObservacion(observacion1);
+                    venta.setFechaInicio(fechaInicio1);
+                    venta.setFechaFinal(fechaFinal1);
+                    venta.setHorario(horario1);
+                    venta.setIdMembresia(Integer.parseInt(idMembresia1));
+                    venta.setIdDieta(Integer.parseInt(idDieta1));
+                    venta.setIdRutina(Integer.parseInt(idRutina1));
+                    venta.setIdCliente(Integer.parseInt(idCliente1));
+                    venta.setIdVentas(ide);
+                    ventasDAO.actualizar(venta);
+                    // Redirigir a la pÃ¡gina Ventas y mostrar una alerta
+                    String mensaje2 = "Venta actualizada correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
+                    break;
+
+                case "Eliminar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    ventasDAO.eliminar(ide);
+                    // Redirigir a la pÃ¡gina Ventas y mostrar una alerta
+                    String mensaje3 = "Venta eliminada correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
+                    break;
+            }
+            request.getRequestDispatcher("Ventas.jsp").forward(request, response);
+        }
+
     }
 
     @Override

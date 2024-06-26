@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 A través del presente documento materia de nuestra investigación, se enfoca en desarrollar una propuesta de solución para modernizar y automatizar los procesos claves de negocio de la empresa MyGym que pertenece al sector fitness y vida saludable.
 
 Para ello se ha definido los siguientes objetivos especificos: Automatizar tareas administrativas como la gestión de membresías, horarios y clientes, reduciendo la carga de trabajo manual del personal.
@@ -22,3 +23,6 @@ Implementar cada membresía tenga accesos diferentes hacia los servicios del gim
 Crear un sistema de registro de clientes que recopile información relevante.
 Asignar el acceso al sistema web a los clientes por nombre de usuario y contraseña.
 El proyecto esta desarrollado en lenguaje Java en su totalidad.
+=======
+# mygym
+>>>>>>> 2a7be8ec6c9189ca3d516722c69b68bf6b59865b

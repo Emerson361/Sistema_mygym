@@ -4,10 +4,12 @@
  */
 package Modelo;
 
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import config.Conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,7 @@ public class ClienteDAO {
                 cli.setFecha_nac(rs.getString(9));
                 cli.setUsuario(rs.getString(10));
                 cli.setPassword(rs.getString(11));
+                cli.setEstado(rs.getInt(12));
                 lista.add(cli); //em
             }
         } catch (Exception e) {
@@ -72,10 +75,29 @@ public class ClienteDAO {
         }
         return lista;
     }
-
+  public Cliente existeCorreo(String correo) {
+      Cliente cliente = new Cliente();
+    String sql = "SELECT * FROM cliente WHERE correo = ?";
+    
+    try {
+        con = cn.Conexion();
+        ps = con.prepareStatement(sql);
+        ps.setString(1, correo);
+        rs = ps.executeQuery();
+       while(rs.next()){
+        cliente.setCorreo(rs.getString("correo"));
+        }
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+       
+    }
+    return cliente;
+     
+}
+  
     
     public int agregar(Cliente cli) {
-        String sql = "INSERT INTO cliente(Nombre, Apellido, doc_tipo, doc_num, telefono, correo, genero, fecha_nac, nom_usuario, contrasena) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cliente(Nombre, Apellido, doc_tipo, doc_num, telefono, correo, genero, fecha_nac, nom_usuario, contrasena, estado_cliente_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
@@ -90,6 +112,7 @@ public class ClienteDAO {
             ps.setString(8, cli.getFecha_nac());
             ps.setString(9, cli.getUsuario());
             ps.setString(10, cli.getPassword());
+            ps.setInt(11, cli.getEstado());
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println( e.getMessage());
@@ -115,6 +138,7 @@ public class ClienteDAO {
                 cl.setFecha_nac(rs.getString(9));
                 cl.setUsuario(rs.getString(10));
                 cl.setPassword(rs.getString(11));
+                cl.setEstado(rs.getInt(12));
             }
         } catch (Exception e) {
             System.out.println( e.getMessage());
@@ -123,7 +147,7 @@ public class ClienteDAO {
     }
 
     public int actualizar(Cliente cli) {
-        String sql = "update cliente set Nombre=?, Apellido=?, doc_tipo=?, doc_num=?, telefono=?, correo=?, genero=?, fecha_nac=?, nom_usuario=?, contrasena=? where id_cliente=?";
+        String sql = "update cliente set Nombre=?, Apellido=?, doc_tipo=?, doc_num=?, telefono=?, correo=?, genero=?, fecha_nac=?, nom_usuario=?, contrasena=?, estado_cliente_id=? where id_cliente=?";
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
@@ -137,7 +161,8 @@ public class ClienteDAO {
             ps.setString(8, cli.getFecha_nac());
             ps.setString(9, cli.getUsuario());
             ps.setString(10, cli.getPassword());
-            ps.setInt(11,  cli.getId());
+            ps.setInt(11,  cli.getEstado());
+            ps.setInt(12,  cli.getId());     
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println( e.getMessage());

@@ -29,7 +29,7 @@
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="" target="myFrame"><strong>Membresia</strong></a>
                     </li>
                     <li class="nav-item">
-                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="" target="myFrame"><strong>Venta</strong></a>
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=VentasCliente&accion=Listar" target="myFrame"><strong>Venta</strong></a>
                     </li>
                     <li class="nav-item">
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="" target="myFrame"><strong>Historial</strong></a>
@@ -39,14 +39,14 @@
 
             <div style="margin-right: 30px" class="dropdown">
                 <button style="border: none" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <strong><!-- ${usuario.getNombre()} ${usuario.getApellido()} --></strong>
+                    <strong> ${cliente.getNombre()} ${cliente.getApellido()} </strong>
                 </button>
                 <div class="dropdown-menu text-center">
                     <a class="dropdown-item" href="#">
                         <img src="img/user.png" alt="90" width="90">
                     </a>
-                    <a class="dropdown-item" href="#"><!-- ${usuario.getUsuario()} --></a>
-                    <a class="dropdown-item" href="#"><!-- ${usuario.getCorreo()} --></a>
+                    <a class="dropdown-item" href="#"> ${cliente.getUsuario()}</a>
+                    <a class="dropdown-item" href="#"> ${cliente.getCorreo()} </a>
                     <div class="dropdown-divider"></div>
 
                     <form action="Validar" method="POST">

@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
@@ -8,10 +8,14 @@ import Modelo.Admin;
 import Modelo.AdministradorDAO;
 import Modelo.Cliente;
 import Modelo.ClienteDAO;
+import Modelo.DetalleMembresia;
+import Modelo.DetalleMembresiaDAO;
 import Modelo.Dieta;
 import Modelo.DietaDAO;
 import Modelo.Entrenador;
 import Modelo.EntrenadorDAO;
+import Modelo.Estado;
+import Modelo.EstadoDAO;
 import Modelo.Membresia;
 import Modelo.MembresiaDAO;
 import Modelo.Nutricionista;
@@ -21,11 +25,27 @@ import Modelo.RutinaDAO;
 import Modelo.Ventas;
 import Modelo.VentasDAO;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
  *
@@ -42,7 +62,7 @@ public class Controlador extends HttpServlet {
 
     Nutricionista nut = new Nutricionista();
     NutricionistaDAO nutDAO = new NutricionistaDAO();
-    
+
     DietaDAO dietaDAO = new DietaDAO();
     Dieta diet = new Dieta();
 
@@ -54,13 +74,18 @@ public class Controlador extends HttpServlet {
 
     Cliente cli = new Cliente();
     ClienteDAO cliDAO = new ClienteDAO();
-    
+
     Ventas venta = new Ventas();
     VentasDAO ventasDAO = new VentasDAO();
-
+    
+    Estado estado = new Estado();
+    EstadoDAO estadoDAO = new EstadoDAO();
+    
+    DetalleMembresia detalle = new DetalleMembresia();
+    DetalleMembresiaDAO detalleDAO = new DetalleMembresiaDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JRException {
 
         String menu = request.getParameter("menu");
         String accion = request.getParameter("accion");
@@ -68,7 +93,12 @@ public class Controlador extends HttpServlet {
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
         }
- if (menu.equals("Dieta")) {
+
+        if (menu.equals("PrincipalCliente")) {
+            request.getRequestDispatcher("PrincipalCliente.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Dieta")) {
             switch (accion) {
                 case "Listar":
                     List lista = dietaDAO.listar();
@@ -84,21 +114,18 @@ public class Controlador extends HttpServlet {
                     String supl = request.getParameter("txtSuplemento");
                     String idNutrS = request.getParameter("txtNutricionista");
                     int idNutr = Integer.parseInt(idNutrS);
-                    
-                    
+
                     diet.setNombre(nombre);
                     diet.setTipoDieta(tipDieta);
                     diet.setDuracion(duracion);
                     diet.setSuplemento(supl);
                     diet.setIdNutricionista(idNutr);
-                    
+
                     dietaDAO.agregar(diet);
                     String mensaje1 = "Dieta agregada correctamente";
                     request.setAttribute("mensaje", mensaje1);
                     request.getRequestDispatcher("Controlador?menu=Dieta&accion=Listar").forward(request, response);
                     break;
-
-
 
                 case "Editar":
                     ide = Integer.parseInt(request.getParameter("id"));
@@ -113,14 +140,13 @@ public class Controlador extends HttpServlet {
                     String duracion1 = request.getParameter("txtDuracion");
                     String supl1 = request.getParameter("txtSuplemento");
                     String idNutrS1 = request.getParameter("txtNutricionista");
-                    
+
                     diet.setNombre(nombre1);
                     diet.setTipoDieta(tipDieta1);
                     diet.setDuracion(duracion1);
                     diet.setSuplemento(supl1);
                     diet.setNutricionista(idNutrS1);
-                    
-                    
+
                     diet.setIdDieta(ide);
                     dietaDAO.actualizar(diet);
                     String mensaje2 = "Dieta actualizada correctamente";
@@ -141,7 +167,7 @@ public class Controlador extends HttpServlet {
 
         if (menu.equals("Rutina")) {
             switch (accion) {
-                    
+
                 case "Listar":
                     List lista = rutDAO.listar();
                     request.setAttribute("rutinas", lista);
@@ -157,7 +183,7 @@ public class Controlador extends HttpServlet {
                     String identrenadorStr = request.getParameter("txtentrenador");
                     // Convertir el ID del entrenador a entero para enviarlo al formulario y bd / captura el id/value del combobox
                     int identrenador = Integer.parseInt(identrenadorStr);
-                    
+
                     rut.setNombre(nombre);
                     rut.setDescripcion(descripcion);
                     rut.setDificultad(dificultad);
@@ -184,7 +210,7 @@ public class Controlador extends HttpServlet {
                     String dificultad1 = request.getParameter("txtdificultad");
                     String frecuencia1 = request.getParameter("txtfrecuencia");
                     String identrenadorStr1 = request.getParameter("txtentrenador");
-                    
+
                     rut.setNombre(nombre1);
                     rut.setDescripcion(descripcion1);
                     rut.setDificultad(dificultad1);
@@ -528,11 +554,82 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("Administrador.jsp").forward(request, response);
         }
 
+        //detalle membresia
+        if (menu.equals("DetalleMembresia")) {
+            switch (accion) {
+
+                case "Listar":
+                    List lista = detalleDAO.listar();
+                    request.setAttribute("detalles", lista);
+                
+                    break;
+
+                case "Agregar":
+                    String fecha = request.getParameter("txtfecha");
+                    String fechatermino = request.getParameter("txtfechatermino");
+                    String horario = request.getParameter("txtHorario");
+                    
+
+                    detalle.setFecha(fecha);
+                    detalle.setFechaTermino(fechatermino);
+                    detalle.setHorario(horario);
+               
+                     
+                    detalleDAO.agregar(detalle);
+                    // Redirigir a la página detmem y mostrar una alerta
+                    String mensaje1 = "Detalle Membresia agregada correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=DetalleMembresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    DetalleMembresia d = detalleDAO.listarId(ide);
+                    request.setAttribute("detalle", d);
+                    request.getRequestDispatcher("Controlador?menu=DetalleMembresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Actualizar":
+                    String fecha1 = request.getParameter("txtfecha");
+                    String fechatermino1 = request.getParameter("txtfechatermino");
+                    String horario1 = request.getParameter("txtHorario");
+                    
+                    detalle.setFecha(fecha1);
+                    detalle.setFechaTermino(fechatermino1);
+                    detalle.setHorario(horario1);
+                    
+                    detalle.setId(ide);
+                    detalleDAO.actualizar(detalle);
+                    // Redirigir a la página detmem y mostrar una alerta
+                    String mensaje2 = "Detalle Membresia actualizado correctamente";
+                    request.setAttribute("mensaje", mensaje2);
+                    request.getRequestDispatcher("Controlador?menu=DetalleMembresia&accion=Listar").forward(request, response);
+                    break;
+
+                case "Eliminar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    detalleDAO.eliminar(ide);
+                    // Redirigir a la página detmem y mostrar una alerta
+                    String mensaje3 = "Detalle Membresia eliminada correctamente";
+                    request.setAttribute("eliminar", mensaje3);
+                    request.getRequestDispatcher("Controlador?menu=DetalleMembresia&accion=Listar").forward(request, response);
+                    break;
+            }
+            request.getRequestDispatcher("DetalleMembresia.jsp").forward(request, response);
+        }
+        
+        
+        
         if (menu.equals("Membresia")) {
             switch (accion) {
                 case "Listar":
                     List lista = memDAO.listar();
                     request.setAttribute("membresias", lista);
+                    List lista2 = estadoDAO.listar();
+                    request.setAttribute("estados", lista2);
+                    List lista3 = detalleDAO.listar();
+                    request.setAttribute("detalles", lista3);
+                    
                     break;
 
                 case "Agregar":
@@ -541,12 +638,19 @@ public class Controlador extends HttpServlet {
                     double Precio = Double.parseDouble(request.getParameter("txtPrecio"));
                     String Acceso = request.getParameter("txtAcceso");
                     String Observacion = request.getParameter("txtObservacion");
+                    String horario = request.getParameter("txthorario");
+                    String estado = request.getParameter("txtestado");
 
+                    
+                     
                     mem.setTipoMembresia(TipoMembresia);
                     mem.setDuracion(Duracion);
                     mem.setPrecio(Precio);
                     mem.setAcceso(Acceso);
                     mem.setObservacion(Observacion);
+                    mem.setIdestado(Integer.parseInt(estado));
+                    mem.setIddetmem(Integer.parseInt(horario));
+             
                     memDAO.agregar(mem);
                     // Redirigir a la página Membresia y mostrar una alerta
                     String mensaje1 = "Membresia agregado correctamente";
@@ -567,12 +671,17 @@ public class Controlador extends HttpServlet {
                     double Precio1 = Double.parseDouble(request.getParameter("txtPrecio"));
                     String Acceso1 = request.getParameter("txtAcceso");
                     String Observacion1 = request.getParameter("txtObservacion");
-
+                    String horario1 = request.getParameter("txthorario");
+                    String estado1 = request.getParameter("txtestado");
+                    
+                    
                     mem.setTipoMembresia(TipoMembresia1);
                     mem.setDuracion(Duracion1);
                     mem.setPrecio(Precio1);
                     mem.setAcceso(Acceso1);
                     mem.setObservacion(Observacion1);
+                    mem.setIdestado(Integer.parseInt(estado1));
+                    mem.setIddetmem(Integer.parseInt(horario1));
                     mem.setId(ide);
                     memDAO.actualizar(mem);
 
@@ -593,7 +702,7 @@ public class Controlador extends HttpServlet {
             }
             request.getRequestDispatcher("Membresia.jsp").forward(request, response);
         }
-        
+
         if (menu.equals("Ventas")) {
             switch (accion) {
                 case "Listar":
@@ -619,7 +728,7 @@ public class Controlador extends HttpServlet {
                     String idDieta = request.getParameter("txtIdDieta");
                     String idRutina = request.getParameter("txtIdRutina");
                     String idCliente = request.getParameter("txtIdCliente");
-                    
+
                     venta.setFechaVenta(fechaVenta);
                     venta.setObservacion(observacion);
                     venta.setFechaInicio(fechaInicio);
@@ -630,10 +739,15 @@ public class Controlador extends HttpServlet {
                     venta.setIdRutina(Integer.parseInt(idRutina));
                     venta.setIdCliente(Integer.parseInt(idCliente));
                     ventasDAO.agregar(venta);
-                    
+
                     String mensaje1 = "Venta agregada correctamente";
                     request.setAttribute("mensaje", mensaje1);
+                    
+           
+                    
                     request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
+                    
+                    
                     break;
 
                 case "Editar":
@@ -653,7 +767,7 @@ public class Controlador extends HttpServlet {
                     String idDieta1 = request.getParameter("txtIdDieta");
                     String idRutina1 = request.getParameter("txtIdRutina");
                     String idCliente1 = request.getParameter("txtIdCliente");
-                    
+
                     venta.setFechaVenta(fechaVenta1);
                     venta.setObservacion(observacion1);
                     venta.setFechaInicio(fechaInicio1);
@@ -683,18 +797,107 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("Ventas.jsp").forward(request, response);
         }
 
+        
+        /* INTERFAZ CLIENTE */
+        if (menu.equals("VentasCliente")) {
+            switch (accion) {
+
+                case "Listar":
+                    //mostrar los combobox
+                    List lista = ventasDAO.listar();
+                    request.setAttribute("ventas", lista);
+                    List lista3 = memDAO.listar();
+                    request.setAttribute("membresias", lista3);
+                    List lista4 = dietaDAO.listar();
+                    request.setAttribute("dietas", lista4);
+                    List lista5 = rutDAO.listar();
+                    request.setAttribute("rutinas", lista5);
+                    break;
+ 
+                case "Agregar":
+                    String fechaVenta = request.getParameter("txtFechaVenta");
+                    String observacion = request.getParameter("txtObservacion");
+                    String idCliente = request.getParameter("txtIdCliente");
+                    String idMembresia = request.getParameter("txtIdMembresia");
+                    String idDieta = request.getParameter("txtIdDieta");
+                    String idRutina = request.getParameter("txtIdRutina");
+                    
+                    
+                    venta.setFechaVenta(fechaVenta);
+                    venta.setObservacion(observacion);
+                   
+                    venta.setIdMembresia(Integer.parseInt(idMembresia));
+                    venta.setIdDieta(Integer.parseInt(idDieta));
+                    venta.setIdRutina(Integer.parseInt(idRutina));
+                    venta.setIdCliente(Integer.parseInt(idCliente));
+                    ventasDAO.agregar(venta);
+
+                    String mensaje1 = "Venta agregada correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    
+                    // reporte
+                    // pdf
+                    String reportCompiled = FileSystems.getDefault().getPath("../Reporte/Boleta.jasper").toAbsolutePath().toString();
+                    JasperReport report = (JasperReport) JRLoader.loadObjectFromFile(reportCompiled);
+
+                    // PARAMETROS A ENVIAR
+                    Map parameters = new HashMap();
+                    parameters.put("codcliente", idCliente);
+
+                    // COLECCION DE DATOS
+                    //Collection<Boleta> datosReporte = TestReportBoleta.generateBoletaReal();
+                    //JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datosReporte);
+                    Connection conn = null;
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                    } catch (ClassNotFoundException e) {
+                        System.out.println("MySQL JDBC Driver not found.");
+                        System.exit(1);
+                    }
+                    try {
+                        conn = DriverManager.getConnection("jdbc:mysql://localhost/mygym", "root", "");
+                        conn.setAutoCommit(false);
+                    } catch (SQLException e) {
+                        System.out.println("Error de conexión: " + e.getMessage());
+                        System.exit(4);
+                    }
+
+                    final JasperPrint print = JasperFillManager.fillReport(report, parameters, conn);
+
+                    // RUTA DEL PDF
+                    final String reportTarget = FileSystems.getDefault().getPath("../Reporte/Boleta_1.pdf").toAbsolutePath().toString();
+
+                    JasperExportManager.exportReportToPdfFile(print, reportTarget);
+                    
+                    
+                    //reportes/bolete.pdf llamar al pdf
+                    request.getRequestDispatcher("../Reporte/boleta_1.pdf").forward(request, response);
+                    //response.sendRedirect(request.getContextPath() + "../Reporte/Boleta_1.pdf");
+                    break;
+            }
+            request.getRequestDispatcher("VentasCliente.jsp").forward(request, response);
+        }
+
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (JRException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (JRException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

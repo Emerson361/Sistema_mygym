@@ -22,27 +22,28 @@ public class ClienteDAO {
     ResultSet rs;
     int r; //rpta
 
-    /*public Admin validar(String usuario, String password) {
-        Admin admin = new Admin();
-        String sql = "select * from administrador where nom_usuario = ? and contrasena = ?";
+    public Cliente validar(String cliente, String password) {
+        Cliente client = new Cliente();
+        String sql = "select * from cliente where nom_usuario = ? and contrasena = ?";
         try {
             con = cn.Conexion();
             ps = con.prepareStatement(sql);
-            ps.setString(1, usuario);
+            ps.setString(1, cliente);
             ps.setString(2, password);
             rs = ps.executeQuery();
             while (rs.next()) {
-                admin.setNombre(rs.getString("Nombre"));
-                admin.setApellido(rs.getString("Apellido"));
-                admin.setCorreo(rs.getString("correo"));
-                admin.setUsuario(rs.getString("nom_usuario"));
-                admin.setPassword(rs.getString("contraseña"));
+                client.setId(rs.getInt("id_cliente"));
+                client.setNombre(rs.getString("Nombre"));
+                client.setApellido(rs.getString("Apellido"));
+                client.setCorreo(rs.getString("correo"));
+                client.setUsuario(rs.getString("nom_usuario"));
+                client.setPassword(rs.getString("contraseña"));
             }
         } catch (Exception e) {
             System.out.println( e.getMessage());
         }
-        return admin;
-    }*/
+        return client;
+    }
 
     // OPERACIONES CRUD
     public List listar() {

@@ -63,6 +63,27 @@
                             <label>Observación:</label>
                             <input type="text" value="${membresia.getObservacion()}" name="txtObservacion" class="form-control" required>
                         </div>
+                        
+                        <div class="form-group">
+                            <label>Horario:</label>
+                            <select class="form-control" name="txthorario" required>
+                                <c:forEach var="det" items="${detalles}">
+                                    <!--value=   asegura que el valor del option sea el ID del detmembresia. -->
+                                    <option ${membresia.getIddetmem().equals(det.getId()) ? 'selected' : ""} value="${det.getId()}">${det.getHorario()}</option>
+                            
+                                </c:forEach>
+                            </select> 
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Estado:</label>
+                            <select class="form-control" name="txtestado" required>
+                                <c:forEach var="est" items="${estados}">
+                                    <!--value=   asegura que el valor del option sea el ID del estado. -->
+                                    <option ${membresia.getIdestado().equals(est.getIdestado()) ? 'selected' : ""} value="${est.getIdestado()}">${est.getDetalle_estado()}</option>
+                                </c:forEach>
+                            </select><br><br>
+                        </div>
 
                         <input type="submit" name="accion" value="Agregar" class="btn btn-info">
                         <input type="submit" name="accion" value="Actualizar" class="btn btn-success">
@@ -98,6 +119,8 @@
                             <th>Precio</th>
                             <th>Acceso</th>
                             <th>Observación</th>
+                            <th>horario</th>
+                            <th>estado</th>             
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -111,6 +134,9 @@
                                 <td>${mem.getPrecio()}</td>
                                 <td>${mem.getAcceso()}</td>
                                 <td>${mem.getObservacion()}</td>
+                                <td>${mem.getDetmem()}</td>
+                                <td>${mem.getEstado()}</td>
+                                
                                 <td>
                                     <a class="btn btn-warning" href="Controlador?menu=Membresia&accion=Editar&id=${mem.getId()}">Editar</a>
                                     <a class="btn btn-danger" href="Controlador?menu=Membresia&accion=Eliminar&id=${mem.getId()}">Delete</a>

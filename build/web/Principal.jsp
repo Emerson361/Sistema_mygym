@@ -41,6 +41,9 @@
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Membresia&accion=Listar" target="myFrame"><strong>Membresia</strong></a>
                     </li>
                     <li class="nav-item">
+                        <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=DetalleMembresia&accion=Listar" target="myFrame"><strong>Detalle Membresia</strong></a>
+                    </li>
+                    <li class="nav-item">
                         <a style="margin-left:10px; border:none" class="btn btn-outline-light" href="Controlador?menu=Ventas&accion=Listar" target="myFrame"><strong>Venta</strong></a>
                     </li>
                 </ul>

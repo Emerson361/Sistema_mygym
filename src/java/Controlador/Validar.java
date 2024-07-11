@@ -6,12 +6,15 @@ package Controlador;
 
 import Modelo.Admin;
 import Modelo.AdministradorDAO;
+import Modelo.Cliente;
+import Modelo.ClienteDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -21,6 +24,10 @@ public class Validar extends HttpServlet {
 
     AdministradorDAO adminDAO = new AdministradorDAO();
     Admin admin = new Admin();
+    
+    ClienteDAO cliDAO = new ClienteDAO();
+    Cliente cliente = new Cliente();
+            
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,22 +57,41 @@ public class Validar extends HttpServlet {
             throws ServletException, IOException {
         
         String accion = request.getParameter("accion");
+        String user = request.getParameter("txtuser");
+        String pass = request.getParameter("txtpass");
+        
         if (accion.equalsIgnoreCase("Ingresar")) {
-            String user = request.getParameter("txtuser");
-            String pass = request.getParameter("txtpass");
+            //Validar como administrador
             admin = adminDAO.validar(user, pass);
+
             if (admin.getUsuario() != null) {
-                request.setAttribute("usuario", admin);
+                request.setAttribute("usuario", admin); // valores para la pag Principal | data de admin logeado
                 request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
+                
             } else {
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                //Validar como cliente
+                cliente = cliDAO.validar(user, pass);
+                
+                if (cliente.getUsuario() != null) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("clientes", cliente); // Guardar el cliente en la sesión
+                    
+                    request.setAttribute("cliente", cliente);// valores para la pag PrincipalCliente | data de cliente logeado
+                    request.getRequestDispatcher("Controlador?menu=PrincipalCliente").forward(request, response);
+                    
+                } else {
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                }
             }
         } else {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
+        
+        
+        
     }
 
-    
+        
     @Override
     public String getServletInfo() {
         return "Short description";

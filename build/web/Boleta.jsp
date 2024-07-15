@@ -32,7 +32,7 @@
                                 <select name="txtIdRecibo" class="form-control" required>
                                     <c:forEach var="venta" items="${ventas}">
                                         <option value="${venta.getId_recibo()}" ${venta.getId_recibo() == boleta.getId_recibo() ? 'selected' : ''}>
-                                            ${venta.getObservaciones()}
+                                            ${venta.getId_recibo()}
                                         </option>
                                     </c:forEach>
                                 </select>
@@ -46,8 +46,8 @@
                             <div class="form-group">
                                 <label>Tipo de Pago:</label>
                                 <select name="txtTipoPago" class="form-control" required>
-                                    <option value="Boleta" ${boleta.getTipo_pago() == 'Boleta' ? 'selected' : ''}>Boleta</option>
-                                    <option value="Factura" ${boleta.getTipo_pago() == 'Factura' ? 'selected' : ''}>Factura</option>
+                                    <option value="Efectivo" ${boleta.getTipo_pago() == 'Efectivo' ? 'selected' : ''}>Efectivo</option>
+                                    <option value="Tarjeta" ${boleta.getTipo_pago() == 'Tarjeta' ? 'selected' : ''}>Tarjeta</option>
                                 </select>
                             </div>
 
@@ -101,7 +101,7 @@
                         <c:forEach var="boleta" items="${boletas}">
                             <tr>
                                 <td>${boleta.getId_boleta()}</td>
-                                <td>${boleta.getRecibo()}</td>
+                                <td>${boleta.getId_recibo()}</td>
                                 <td>${boleta.getFecha_pago()}</td>
                                 <td>${boleta.getTipo_pago()}</td>
                                 <td>${boleta.getEstado_pago()}</td>

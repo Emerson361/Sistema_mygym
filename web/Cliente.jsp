@@ -58,7 +58,7 @@
                         
                         <div class="form-group">
                             <label>Correo Electronico:</label>
-                            <input type="text" value="${cliente.getCorreo()}" name="txtCorreo" class="form-control" required>
+                            <input type="email" value="${cliente.getCorreo()}" name="txtCorreo" class="form-control" required>
                         </div>
 
                         <div class="form-group">
@@ -82,6 +82,11 @@
                         <div class="form-group">
                             <label>Contraseña:</label>
                             <input type="password" value="${cliente.getPassword()}" name="txtContrasena" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Estado:</label>
+                            <input type="text" value="${cliente.getEstado()}" name="intEstado" class="form-control" required>
                         </div>
 
                         <input type="submit" name="accion" value="Agregar" class="btn btn-info">

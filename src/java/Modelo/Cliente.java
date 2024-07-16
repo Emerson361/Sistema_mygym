@@ -20,13 +20,14 @@ public class Cliente {
     String fecha_nac;
     String usuario;
     String password;
+    int estado;
 
     public Cliente() {
     }
 
     
     
-    public Cliente(int id, String nombre, String apellido, String tipo_doc, String num_doc, String telefono, String correo, String genero, String fecha_nac, String usuario, String password) {
+    public Cliente(int id, String nombre, String apellido, String tipo_doc, String num_doc, String telefono, String correo, String genero, String fecha_nac, String usuario, String password, int estado) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -38,6 +39,7 @@ public class Cliente {
         this.fecha_nac = fecha_nac;
         this.usuario = usuario;
         this.password = password;
+        this.estado = estado;
     }
 
     public int getId() {
@@ -127,6 +129,12 @@ public class Cliente {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado=estado;
+    }
     
 }

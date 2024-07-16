@@ -37,7 +37,7 @@ public class Controlador extends HttpServlet {
 
     Admin admin = new Admin();
     AdministradorDAO adminDAO = new AdministradorDAO();
-    int ide;
+    int ide, est, est1;
 
     Entrenador ent = new Entrenador();
     EntrenadorDAO entDAO = new EntrenadorDAO();
@@ -144,6 +144,61 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("Dieta.jsp").forward(request, response);
         }
 
+   // Registro de usuario
+        if (menu.equals("Registro")) {
+            switch (accion) {
+                case "Mostrar":
+                    request.getRequestDispatcher("NuevoUsuario.jsp").forward(request, response);
+                    break;
+                case "Salir":
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+                break;
+
+                case "Registrar":
+                     String nombre = request.getParameter("txtNombre");
+                    String apellidos = request.getParameter("txtApellido");
+                    String tipoDocumento = request.getParameter("txtTipoDocumento");
+                    String numeroDocumento = request.getParameter("txtDocumento");
+                    String telefono = request.getParameter("txtTelefono");
+                    String correo = request.getParameter("txtCorreo");
+                    String genero = request.getParameter("txtGenero");
+                    String fechaNacimiento = request.getParameter("txtfechanac");
+                    String nombreUsuario = request.getParameter("txtNombreUsuario");
+                    String contrasena = request.getParameter("txtContrasena");
+                    est= 0;
+                       // Verificar si el correo ya existe
+                    Cliente clien = new Cliente();
+                    clien=cliDAO.existeCorreo(correo);
+                    if (clien.getCorreo()!=null) {
+                        request.setAttribute("mensaje1", "El correo electrónico ya está registrado.");
+                        request.getRequestDispatcher("Controlador?menu=Registro&accion=Mostrar").forward(request, response);
+                    } else {
+                      
+                    // Crear nuevo cliente
+                    cli.setNombre(nombre);
+                    cli.setApellido(apellidos);
+                    cli.setTipo_doc(tipoDocumento);
+                    cli.setNum_doc(numeroDocumento);
+                    cli.setTelefono(telefono);
+                    cli.setCorreo(correo);
+                    cli.setGenero(genero);
+                    cli.setFecha_nac(fechaNacimiento);
+                    cli.setUsuario(nombreUsuario);
+                    cli.setPassword(contrasena);
+                    cli.setEstado(est);
+                    cliDAO.agregar(cli);
+                     // Redirigir a la página Cliente y mostrar una alerta
+                    String mensaje1 = "Datos guardados correctamente";
+                    request.setAttribute("mensaje", mensaje1);
+                    request.getRequestDispatcher("Controlador?menu=Registro&accion=Mostrar").forward(request, response);
+                  
+                   
+                    }
+                    break;
+//   
+            }
+              request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
         if (menu.equals("Rutina")) {
             switch (accion) {
                     
@@ -233,6 +288,7 @@ public class Controlador extends HttpServlet {
                     String fecha_nac = request.getParameter("txtfechanac");
                     String NUsuario = request.getParameter("txtNombreUsuario");
                     String contraseña = request.getParameter("txtContrasena");
+                    est= Integer.parseInt(request.getParameter("intEstado"));
                     cli.setNombre(nombre);
                     cli.setApellido(apellido);
                     cli.setTipo_doc(TDoc);
@@ -243,6 +299,7 @@ public class Controlador extends HttpServlet {
                     cli.setFecha_nac(fecha_nac);
                     cli.setUsuario(NUsuario);
                     cli.setPassword(contraseña);
+                    cli.setEstado(est);
                     cliDAO.agregar(cli);
 
                     // Redirigir a la página Cliente y mostrar una alerta
@@ -269,6 +326,7 @@ public class Controlador extends HttpServlet {
                     String fecha_nac1 = request.getParameter("txtfechanac");
                     String NUsuario1 = request.getParameter("txtNombreUsuario");
                     String contraseña1 = request.getParameter("txtContrasena");
+                    est= Integer.parseInt(request.getParameter("intEstado"));
                     cli.setNombre(nombre1);
                     cli.setApellido(apellido1);
                     cli.setTipo_doc(TDoc1);
@@ -280,6 +338,7 @@ public class Controlador extends HttpServlet {
                     cli.setUsuario(NUsuario1);
                     cli.setPassword(contraseña1);
                     cli.setId(ide);
+                    cli.setEstado(est);
                     cliDAO.actualizar(cli);
 
                     // Redirigir a la página Cliente y mostrar una alerta
@@ -672,9 +731,10 @@ public class Controlador extends HttpServlet {
                     request.setAttribute("eliminar", mensaje3);
                     request.getRequestDispatcher("Controlador?menu=Ventas&accion=Listar").forward(request, response);
                     break;
-            }
+                }
             request.getRequestDispatcher("Ventas.jsp").forward(request, response);
         }
+<<<<<<< HEAD
         
         if (menu.equals("Boleta")) {
             switch (accion) {
@@ -739,6 +799,8 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("Boleta.jsp").forward(request, response);
         }
 
+=======
+>>>>>>> fiestas
     }
 
     @Override

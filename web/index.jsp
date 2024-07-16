@@ -33,7 +33,13 @@
                             <input type="password" name="txtpass" class="form-control">
                         </div>
                         
-                        <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-block">
+<!--                        <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-block">-->
+                        
+                        <div class="d-flex justify-content-between">
+                            <input type="submit" name="accion" value="Ingresar" class="btn btn-primary">
+                            <a href="NuevoUsuario.jsp" class="btn btn-link">Crear Nuevo Usuario</a>
+                            <a href="main.jsp" class="btn btn-link">Principal</a>
+                        </div>
                     </form> 
                 </div>
             </div>

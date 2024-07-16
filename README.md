@@ -26,3 +26,5 @@ El proyecto esta desarrollado en lenguaje Java en su totalidad.
 =======
 # mygym
 >>>>>>> 2a7be8ec6c9189ca3d516722c69b68bf6b59865b
+
+Armando Fiestas agrega la rama "fiestas"

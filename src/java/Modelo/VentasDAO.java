@@ -8,6 +8,8 @@ import config.Conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +61,7 @@ public class VentasDAO {
                 venta.setDieta(rs.getString("dieta"));
                 venta.setIdRutina(rs.getInt("Id_rutina"));
                 venta.setRutina(rs.getString("rutina"));
+                
                 lista.add(venta);
             }
         } catch (Exception e) {
@@ -74,7 +77,7 @@ public class VentasDAO {
         int r = 0;
         try {
             con = cn.Conexion();
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, venta.getFechaVenta());
             ps.setString(2, venta.getObservacion());
             ps.setInt(3, venta.getIdCliente());
@@ -83,6 +86,19 @@ public class VentasDAO {
             ps.setInt(6, venta.getIdRutina());
             
             r = ps.executeUpdate();
+            if (r == 0) {
+                    throw new SQLException("Creating user failed, no rows affected.");
+                }
+
+        try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                r = generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+            
         } catch (Exception e) {
             System.out.println( e.getMessage());
         }
@@ -151,6 +167,53 @@ public class VentasDAO {
         }
     }
 
+    
+    public List listarCliente(int idcliente) {
+        String sql = "SELECT \n"
+                + "    ventas.id_ventas,\n"
+                + "    ventas.fecha_venta,\n"
+                + "    ventas.observacion,\n"
+                + "    ventas.Id_cliente,\n"
+                + "    CONCAT(cliente.Nombre, ' ', cliente.Apellido) AS cliente,\n"
+                + "    ventas.Id_membresia,\n"
+                + "    membresia.tipo_membresia AS membresia,\n"
+                + "    ventas.Id_dieta,\n"
+                + "    dieta.nombre AS dieta,\n"
+                + "    ventas.Id_rutina,\n"
+                + "    rutina.Nombre AS rutina\n"
+                + "FROM ventas\n"
+                + "INNER JOIN cliente ON ventas.Id_cliente = cliente.id_cliente\n"
+                + "INNER JOIN membresia ON ventas.Id_membresia = membresia.id_membresia\n"
+                + "INNER JOIN dieta ON ventas.Id_dieta = dieta.Id_dieta\n"
+                + "INNER JOIN rutina ON ventas.Id_rutina = rutina.id_rutina"
+                + "where ventas.Id_cliente = "+idcliente;
+         
+        List<Ventas> lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Ventas venta = new Ventas();
+                venta.setIdVentas(rs.getInt("Id_ventas"));
+                venta.setFechaVenta(rs.getString("fecha_venta"));
+                venta.setObservacion(rs.getString("observacion"));
+                venta.setIdCliente(rs.getInt("Id_cliente"));
+                venta.setCliente(rs.getString("cliente"));
+                venta.setIdMembresia(rs.getInt("Id_membresia"));
+                venta.setMembresia(rs.getString("membresia"));
+                venta.setIdDieta(rs.getInt("Id_dieta"));
+                venta.setDieta(rs.getString("dieta"));
+                venta.setIdRutina(rs.getInt("Id_rutina"));
+                venta.setRutina(rs.getString("rutina"));
+                
+                lista.add(venta);
+            }
+        } catch (Exception e) {
+            System.out.println( e.getMessage());
+        }
+        return lista;
+    }
     
      
     }

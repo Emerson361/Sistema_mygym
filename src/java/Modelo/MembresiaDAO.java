@@ -105,7 +105,7 @@ public class MembresiaDAO {
         Membresia me = new Membresia();
         String sql = "SELECT membresia.id_membresia, membresia.tipo_membresia, membresia.duracion_meses, membresia.precio,\n" +
 "                    membresia.acceso, membresia.observaciones, estado.detalle_estado AS estado,\n" +
-"                    detalle_membresia.id_detalle_mem FROM membresia \n" +
+"                    detalle_membresia.id_detalle_mem, estado.id_estado FROM membresia \n" +
 "                    INNER JOIN estado ON membresia.estado_detmem_id = estado.id_estado "
                 + "INNER JOIN detalle_membresia ON membresia.detalle_mem_id = detalle_membresia.id_detalle_mem "
                 + "where id_membresia =" + id;
@@ -121,6 +121,7 @@ public class MembresiaDAO {
                 me.setObservacion(rs.getString(6));
                 me.setEstado(rs.getString(7));
                 me.setIddetmem(rs.getInt(8));
+                me.setIdestado(rs.getInt(9));
                 
                 
             }

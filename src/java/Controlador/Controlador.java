@@ -24,6 +24,9 @@ import Modelo.Rutina;
 import Modelo.RutinaDAO;
 import Modelo.Ventas;
 import Modelo.VentasDAO;
+import config.Conexion;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.sql.Connection;
@@ -39,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -46,6 +50,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -800,9 +805,11 @@ public class Controlador extends HttpServlet {
         
         /* INTERFAZ CLIENTE */
         if (menu.equals("VentasCliente")) {
+
             switch (accion) {
 
                 case "Listar":
+
                     //mostrar los combobox
                     List lista = ventasDAO.listar();
                     request.setAttribute("ventas", lista);
@@ -813,31 +820,61 @@ public class Controlador extends HttpServlet {
                     List lista5 = rutDAO.listar();
                     request.setAttribute("rutinas", lista5);
                     break;
- 
+
                 case "Agregar":
+
                     String fechaVenta = request.getParameter("txtFechaVenta");
                     String observacion = request.getParameter("txtObservacion");
                     String idCliente = request.getParameter("txtIdCliente");
                     String idMembresia = request.getParameter("txtIdMembresia");
                     String idDieta = request.getParameter("txtIdDieta");
                     String idRutina = request.getParameter("txtIdRutina");
-                    
-                    
+
                     venta.setFechaVenta(fechaVenta);
                     venta.setObservacion(observacion);
-                   
                     venta.setIdMembresia(Integer.parseInt(idMembresia));
                     venta.setIdDieta(Integer.parseInt(idDieta));
                     venta.setIdRutina(Integer.parseInt(idRutina));
                     venta.setIdCliente(Integer.parseInt(idCliente));
-                    ventasDAO.agregar(venta);
+                    int cod_reserva_gen = ventasDAO.agregar(venta);
 
                     String mensaje1 = "Venta agregada correctamente";
                     request.setAttribute("mensaje", mensaje1);
+
+                    try {
+                        Conexion con = new Conexion();
+                        Connection conn = con.Conexion();
+                        
+                        JasperReport reporte = null;
+                        //String path = "D:\\Reportes\\Boleta.jasper";
+                        String path = "C:\\Users\\EMERSOM APAZA\\Desktop\\Sistema_MyGym\\MyGym\\Reportes\\Boleta.jasper";
+                       
+                        
+                        Map parametro = new HashMap();
+                        
+                        //parametro.put("codcliente", idCliente);
+                         parametro.put("codreserva", cod_reserva_gen);
+
+                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                        
+                        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conn);
+                        
+                        // RUTA DEL PDF
+                    final String reportTarget =  "C:\\Users\\EMERSOM APAZA\\Desktop\\Sistema_MyGym\\MyGym\\Reportes\\Boleta_01.pdf";
+                    JasperExportManager.exportReportToPdfFile(jprint, reportTarget);
+                        //JasperViewer view = new JasperViewer(jprint, false);
+                        
+                        //view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        
+                        //view.setVisible(true);
+                         
+                    } catch (JRException e) {
+                        Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, e);
+                    }
                     
-                    // reporte
+                    /*reporte 
                     // pdf
-                    String reportCompiled = FileSystems.getDefault().getPath("../Reporte/Boleta.jasper").toAbsolutePath().toString();
+                    String reportCompiled = FileSystems.getDefault().getPath("src/java/Reporte/Boleta.jasper").toAbsolutePath().toString();
                     JasperReport report = (JasperReport) JRLoader.loadObjectFromFile(reportCompiled);
 
                     // PARAMETROS A ENVIAR
@@ -865,14 +902,12 @@ public class Controlador extends HttpServlet {
                     final JasperPrint print = JasperFillManager.fillReport(report, parameters, conn);
 
                     // RUTA DEL PDF
-                    final String reportTarget = FileSystems.getDefault().getPath("../Reporte/Boleta_1.pdf").toAbsolutePath().toString();
-
+                    final String reportTarget = FileSystems.getDefault().getPath("report/boleta_1.pdf").toAbsolutePath().toString();
                     JasperExportManager.exportReportToPdfFile(print, reportTarget);
-                    
-                    
+
                     //reportes/bolete.pdf llamar al pdf
-                    request.getRequestDispatcher("../Reporte/boleta_1.pdf").forward(request, response);
-                    //response.sendRedirect(request.getContextPath() + "../Reporte/Boleta_1.pdf");
+                    //request.getRequestDispatcher("report/boleta_1.pdf").forward(request, response);
+                    response.sendRedirect(request.getContextPath() + "report/boleta_1.pdf");*/
                     break;
             }
             request.getRequestDispatcher("VentasCliente.jsp").forward(request, response);

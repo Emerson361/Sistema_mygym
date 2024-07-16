@@ -3,9 +3,7 @@
 	<property name="ireport.zoom" value="1.2100000000000009"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="codcliente" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
+	<parameter name="codreserva" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select c.nombre, c.Apellido, c.doc_num, c.telefono, c.correo, c.genero,
 	det.horario, det.fecha_inicio, det.fecha_final, m.tipo_membresia, m.precio,
@@ -15,7 +13,7 @@ inner join cliente c on v.Id_cliente = c.id_cliente
 inner join membresia m on v.Id_membresia = m.id_membresia
 inner join detalle_membresia det on m.detalle_mem_id = det.id_detalle_mem
 inner join dieta d on v.Id_dieta = d.Id_dieta
-inner join rutina r on v.Id_rutina = r.id_rutina where c.id_cliente = $P!{codcliente}]]>
+inner join rutina r on v.Id_rutina = r.id_rutina where v.id_ventas = $P!{codreserva}]]>
 	</queryString>
 	<field name="nombre" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>

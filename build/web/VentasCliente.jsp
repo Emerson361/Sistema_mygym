@@ -37,8 +37,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <label hidden>Cliente:</label>
-                                <input type="text" value="${sessionScope.clientes.id}" name="txtIdCliente" class="form-control" required readonly hidden>              
+                                <label >Cliente:</label>
+                                <input type="text" value="${sessionScope.clientes.id}" name="txtIdCliente" class="form-control" required>              
                             </div>
 
                             <div class="form-group">

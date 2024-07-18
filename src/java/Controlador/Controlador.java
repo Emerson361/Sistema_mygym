@@ -734,7 +734,6 @@ public class Controlador extends HttpServlet {
                 }
             request.getRequestDispatcher("Ventas.jsp").forward(request, response);
         }
-<<<<<<< HEAD
         
         if (menu.equals("Boleta")) {
             switch (accion) {
@@ -799,8 +798,6 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("Boleta.jsp").forward(request, response);
         }
 
-=======
->>>>>>> fiestas
     }
 
     @Override

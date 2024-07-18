@@ -4,7 +4,7 @@
  */
 package Modelo;
 
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
+/*import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;*/
 import config.Conexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
